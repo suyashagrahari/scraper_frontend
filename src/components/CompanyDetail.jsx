@@ -99,7 +99,7 @@ const CompanyDetail = () => {
         </nav>
 
         {/* Main Content */}
-        <div className="grid gap-8 md:grid-cols-2 bg-gradient-to-br from-indigo-100 via-purple-100 to-pink-100 p-8 sm:p-10 rounded-xl shadow-lg">
+        <div className="grid gap-8 md:grid-cols-2 bg-gradient-to-br from-indigo-100 via-purple-100 to-pink-100 p-4 sm:p-8 rounded-xl shadow-lg">
           {/* Left Column - Company Details */}
           <motion.div
             variants={cardVariants}
@@ -109,7 +109,7 @@ const CompanyDetail = () => {
             className="space-y-8">
             {/* Company Info Card */}
             <div className="overflow-hidden rounded-lg bg-white shadow-lg">
-              <div className="p-6">
+              <div className="p-4 sm:p-6">
                 <div className="flex flex-col items-center gap-4 text-center sm:flex-row sm:text-left">
                   {company?.logo ? (
                     <img
@@ -123,7 +123,7 @@ const CompanyDetail = () => {
                     </div>
                   )}
                   <div>
-                    <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">
+                    <h1 className="text-xl font-bold text-gray-900 sm:text-2xl md:text-3xl">
                       {company?.name || "Company Name Not Available"}
                     </h1>
                     <p className="mt-2 text-sm text-gray-500">
@@ -138,7 +138,7 @@ const CompanyDetail = () => {
             <motion.div
               variants={cardVariants}
               className="overflow-hidden rounded-lg bg-white shadow-lg">
-              <div className="p-6">
+              <div className="p-4 sm:p-6">
                 <h2 className="mb-4 text-lg font-semibold text-gray-900">
                   Contact Information
                 </h2>
@@ -150,7 +150,7 @@ const CompanyDetail = () => {
                         href={company.websiteUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-purple-600 hover:underline">
+                        className="text-purple-600 hover:underline break-all">
                         {company.websiteUrl}
                       </a>
                     </div>
@@ -169,11 +169,11 @@ const CompanyDetail = () => {
             <motion.div
               variants={cardVariants}
               className="overflow-hidden rounded-lg bg-white shadow-lg">
-              <div className="p-6">
+              <div className="p-4 sm:p-6">
                 <h2 className="mb-4 text-lg font-semibold text-gray-900">
                   Social Media
                 </h2>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {company?.facebookUrl && (
                     <a
                       href={company.facebookUrl}
@@ -221,7 +221,7 @@ const CompanyDetail = () => {
             <motion.div
               variants={cardVariants}
               className="overflow-hidden rounded-lg bg-white shadow-lg">
-              <div className="p-6">
+              <div className="p-4 sm:p-6">
                 <h2 className="mb-4 text-lg font-semibold text-gray-900">
                   Additional Information
                 </h2>
@@ -254,7 +254,7 @@ const CompanyDetail = () => {
             className="space-y-8">
             {/* Screenshot Card */}
             <div className="overflow-hidden rounded-lg bg-white shadow-lg">
-              <div className="p-6">
+              <div className="p-4 sm:p-6">
                 <h2 className="mb-4 text-lg font-semibold text-gray-900">
                   Website Screenshot
                 </h2>
@@ -265,7 +265,7 @@ const CompanyDetail = () => {
                     className="w-full rounded-lg object-cover"
                   />
                 ) : (
-                  <div className="flex h-[400px] items-center justify-center bg-gray-50 text-gray-400">
+                  <div className="flex h-[200px] sm:h-[300px] md:h-[400px] items-center justify-center bg-gray-50 text-gray-400">
                     No screenshot available
                   </div>
                 )}
