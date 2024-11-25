@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from "react";
-import { motion } from "framer-motion";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import axios from "axios";
 import {
+  Home,
+  ChevronRight,
+  Info,
+  Phone,
+  Mail,
+  Globe,
+  Camera,
   Facebook,
   Instagram,
-  Linkedin,
   Twitter,
-  Globe,
-  Phone,
-  ArrowLeft,
-  Calendar,
-  Clock,
+  Linkedin,
+  MapPin,
 } from "lucide-react";
 
 const CompanyDetail = () => {
@@ -20,261 +22,229 @@ const CompanyDetail = () => {
   const [loading, setLoading] = useState(true);
   const { companyId } = useParams();
 
-  const fetchCompanyDetails = async () => {
-    try {
-      const response = await axios.get(
-        `https://suyashagrahari.work.gd/api/data/${companyId}`
-      );
-      setCompany(response.data.data);
-    } catch (error) {
-      console.error("Error fetching company details:", error.message);
-      setError("Failed to fetch company details.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
-    const timer = setTimeout(() => {
-      fetchCompanyDetails();
-    }, 1000);
+    const fetchCompanyDetails = async () => {
+      try {
+        const response = await axios.get(
+          `https://suyashagrahari.work.gd/api/data/${companyId}`
+        );
+        setCompany(response.data.data);
+      } catch (error) {
+        console.error("Error fetching company details:", error.message);
+        setError("Failed to fetch company details.");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    return () => clearTimeout(timer);
+    fetchCompanyDetails();
   }, [companyId]);
 
-  if (loading) {
+  if (loading)
     return (
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="flex h-screen items-center justify-center bg-gradient-to-br from-purple-50 to-indigo-50">
-        <div className="flex items-center gap-2 rounded-lg bg-white p-4 shadow-lg">
-          <div className="h-6 w-6 animate-spin rounded-full border-4 border-purple-600 border-t-transparent"></div>
-          <span className="text-lg font-medium text-purple-600">
-            Loading...
-          </span>
-        </div>
-      </motion.div>
+      <div className="flex h-screen items-center justify-center">
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent"></div>
+      </div>
     );
-  }
-
-  if (error) {
+  if (error)
     return (
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="flex h-screen items-center justify-center bg-gradient-to-br from-purple-50 to-indigo-50">
-        <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-lg">
-          <div className="text-center text-red-500">
-            <h2 className="mb-2 text-xl font-bold">Error</h2>
-            <p>{error}</p>
-          </div>
-        </div>
-      </motion.div>
+      <div className="flex h-screen items-center justify-center text-red-500 font-medium">
+        {error}
+      </div>
     );
-  }
-
-  const cardVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0 },
-  };
+  if (!company)
+    return (
+      <div className="flex h-screen items-center justify-center text-muted-foreground">
+        No company data available.
+      </div>
+    );
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="min-h-screen bg-gradient-to-br from-purple-50 to-indigo-50 p-4 md:p-8">
-      <div className="mx-auto max-w-7xl">
-        {/* Breadcrumb */}
-        <nav className="mb-6 flex items-center space-x-2 text-sm text-gray-600">
-          <a href="/list" className="flex items-center hover:text-purple-600">
-            <ArrowLeft className="mr-1 h-4 w-4" />
-            Back to List
-          </a>
-          <span>/</span>
-          <span className="text-gray-900">
-            {company?.name || "Company Details"}
-          </span>
-        </nav>
-
-        {/* Main Content */}
-        <div className="grid gap-8 md:grid-cols-2 bg-gradient-to-br from-indigo-100 via-purple-100 to-pink-100 p-4 sm:p-8 rounded-xl shadow-lg">
-          {/* Left Column - Company Details */}
-          <motion.div
-            variants={cardVariants}
-            initial="hidden"
-            animate="visible"
-            transition={{ duration: 0.5 }}
-            className="space-y-8">
-            {/* Company Info Card */}
-            <div className="overflow-hidden rounded-lg bg-white shadow-lg">
-              <div className="p-4 sm:p-6">
-                <div className="flex flex-col items-center gap-4 text-center sm:flex-row sm:text-left">
-                  {company?.logo ? (
-                    <img
-                      src={company.logo}
-                      alt={company.name}
-                      className="h-20 w-20 rounded-lg object-cover shadow-lg"
-                    />
-                  ) : (
-                    <div className="flex h-20 w-20 items-center justify-center rounded-lg bg-purple-100 text-purple-600">
-                      {company?.name?.charAt(0) || "?"}
-                    </div>
-                  )}
-                  <div>
-                    <h1 className="text-xl font-bold text-gray-900 sm:text-2xl md:text-3xl">
-                      {company?.name || "Company Name Not Available"}
-                    </h1>
-                    <p className="mt-2 text-sm text-gray-500">
-                      {company?.description || "No description available"}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Contact Info Card */}
-            <motion.div
-              variants={cardVariants}
-              className="overflow-hidden rounded-lg bg-white shadow-lg">
-              <div className="p-4 sm:p-6">
-                <h2 className="mb-4 text-lg font-semibold text-gray-900">
-                  Contact Information
-                </h2>
-                <div className="space-y-4">
-                  {company?.websiteUrl && (
-                    <div className="flex items-center gap-2">
-                      <Globe className="h-5 w-5 text-purple-600" />
-                      <a
-                        href={company.websiteUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-purple-600 hover:underline break-all">
-                        {company.websiteUrl}
-                      </a>
-                    </div>
-                  )}
-                  {company?.phoneNumbers && company.phoneNumbers.length > 0 && (
-                    <div className="flex items-center gap-2">
-                      <Phone className="h-5 w-5 text-purple-600" />
-                      <span>{company.phoneNumbers[0]}</span>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </motion.div>
-
-            {/* Social Media Card */}
-            <motion.div
-              variants={cardVariants}
-              className="overflow-hidden rounded-lg bg-white shadow-lg">
-              <div className="p-4 sm:p-6">
-                <h2 className="mb-4 text-lg font-semibold text-gray-900">
-                  Social Media
-                </h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {company?.facebookUrl && (
-                    <a
-                      href={company.facebookUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-2 rounded-lg bg-blue-50 p-3 text-blue-700 transition-colors hover:bg-blue-100">
-                      <Facebook className="h-5 w-5" />
-                      <span>Facebook</span>
-                    </a>
-                  )}
-                  {company?.twitterUrl && (
-                    <a
-                      href={company.twitterUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-2 rounded-lg bg-blue-50 p-3 text-blue-400 transition-colors hover:bg-blue-100">
-                      <Twitter className="h-5 w-5" />
-                      <span>Twitter</span>
-                    </a>
-                  )}
-                  {company?.linkedinUrl && (
-                    <a
-                      href={company.linkedinUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-2 rounded-lg bg-blue-50 p-3 text-blue-700 transition-colors hover:bg-blue-100">
-                      <Linkedin className="h-5 w-5" />
-                      <span>LinkedIn</span>
-                    </a>
-                  )}
-                  {company?.instagramUrl && (
-                    <a
-                      href={company.instagramUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-2 rounded-lg bg-pink-50 p-3 text-pink-600 transition-colors hover:bg-pink-100">
-                      <Instagram className="h-5 w-5" />
-                      <span>Instagram</span>
-                    </a>
-                  )}
-                </div>
-              </div>
-            </motion.div>
-            {/* Additional Info Card */}
-            <motion.div
-              variants={cardVariants}
-              className="overflow-hidden rounded-lg bg-white shadow-lg">
-              <div className="p-4 sm:p-6">
-                <h2 className="mb-4 text-lg font-semibold text-gray-900">
-                  Additional Information
-                </h2>
-                <div className="space-y-4">
-                  <div className="flex items-center gap-2">
-                    <Calendar className="h-5 w-5 text-purple-600" />
-                    <span>
-                      Created:{" "}
-                      {new Date(company?.createdAt).toLocaleDateString()}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Clock className="h-5 w-5 text-purple-600" />
-                    <span>
-                      Last Updated:{" "}
-                      {new Date(company?.updatedAt).toLocaleDateString()}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          </motion.div>
-
-          {/* Right Column - Screenshot and Additional Info */}
-          <motion.div
-            variants={cardVariants}
-            initial="hidden"
-            animate="visible"
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="space-y-8">
-            {/* Screenshot Card */}
-            <div className="overflow-hidden rounded-lg bg-white shadow-lg">
-              <div className="p-4 sm:p-6">
-                <h2 className="mb-4 text-lg font-semibold text-gray-900">
-                  Website Screenshot
-                </h2>
-                {company?.screenshotUrl ? (
-                  <img
-                    src={company.screenshotUrl}
-                    alt="Website Screenshot"
-                    className="w-full rounded-lg object-cover"
-                  />
-                ) : (
-                  <div className="flex h-[200px] sm:h-[300px] md:h-[400px] items-center justify-center bg-gray-50 text-gray-400">
-                    No screenshot available
-                  </div>
-                )}
-              </div>
-            </div>
-          </motion.div>
+    <div className="min-h-screen bg-gray-100">
+      {/* Breadcrumb */}
+      <div className="border-b bg-white shadow-sm">
+        <div className="mx-auto w-[100%] px-4 py-4 sm:px-6 lg:px-8">
+          <nav className="flex items-center space-x-2 text-sm">
+            <Link
+              to="/list"
+              className="text-muted-foreground hover:text-primary transition-colors font-bold">
+              {/* <Home className="h-4 w-4" /> */}
+              List
+            </Link>
+            <ChevronRight className="h-4 w-4 text-muted-foreground" />
+            <span className="font-bold text-foreground">{company.name}</span>
+          </nav>
         </div>
       </div>
-    </motion.div>
+
+      {/* Main Content */}
+      <div className="mx-auto w-[100%] p-4 space-y-3">
+        {/* Company Header */}
+        <div className="grid md:grid-cols-2 gap-8 rounded-lg bg-white p-6 shadow-sm">
+          {/* Logo and Description */}
+          <div className="flex sm:flex-row flex-col gap-5">
+            <img
+              src={company.logo || "/placeholder.png"}
+              alt={company.name}
+              className="h-32 w-32 rounded-lg object-cover border shadow-sm"
+            />
+            <div className="space-y-2">
+              <h1 className="text-2xl font-bold tracking-tight text-foreground">
+                {company.name}
+              </h1>
+              <div className="flex items-center space-x-2 text-sm text-gray-600 font-semibold">
+                <Info className="h-4 w-4 font-bold" />
+                <span className="font-bold">Description</span>
+              </div>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                {company.description || "No description available"}
+              </p>
+            </div>
+          </div>
+
+          {/* Contact Information */}
+          <div className="space-y-4 md:border-l md:pl-8">
+            <div>
+              <div className="flex items-center space-x-2 text-sm text-gray-600 font-semibold">
+                <Phone className="h-4 w-4 text-primary font-bold" />
+                <span className="font-bold text-foreground">Phone</span>
+              </div>
+              <a
+                href={`tel:${company.phoneNumbers?.[0]}`}
+                className="text-sm text-primary hover:underline">
+                {company.phoneNumbers?.[0] || "N/A"}
+              </a>
+            </div>
+            <div>
+              <div className="flex items-center space-x-2 text-sm text-gray-600 font-semibold">
+                <Mail className="h-4 w-4 text-primary font-bold" />
+                <span className="font-bold text-foreground">Email</span>
+              </div>
+              <a
+                href={`mailto:${company.email}`}
+                className="text-sm text-primary hover:underline">
+                {company.email || "N/A"}
+              </a>
+            </div>
+          </div>
+        </div>
+
+        {/* Company Details and Screenshot */}
+        <div className="grid lg:grid-cols-3 gap-3">
+          {/* Company Details */}
+          <div className="bg-white p-5 rounded-md">
+            <h2 className="mb-4 text-lg font-semibold text-gray-900">
+              Company Details
+            </h2>
+            <div className="space-y-4 rounded-lg ">
+              <div>
+                <div className="flex items-center space-x-2 text-sm text-gray-600 font-semibold">
+                  <Globe className="h-4 w-4 font-bold" />
+                  <span className="font-bold">Website</span>
+                </div>
+                <p className="text-sm text-gray-900">
+                  {company.websiteUrl
+                    ? new URL(company.websiteUrl).hostname
+                    : "N/A"}
+                </p>
+              </div>
+              <div>
+                <div className="flex items-center space-x-2 text-sm text-gray-600 font-bold">
+                  <Info className="h-4 w-4" />
+                  <span>Description</span>
+                </div>
+                <p className="text-sm text-gray-900">
+                  {company.description || "N/A"}
+                </p>
+              </div>
+              <div>
+                <div className="flex items-center space-x-2 text-sm text-gray-600 font-bold">
+                  <Mail className="h-4 w-4" />
+                  <span>Email</span>
+                </div>
+                <p className="text-sm text-gray-900">
+                  {company.email || "N/A"}
+                </p>
+              </div>
+              <div>
+                <div className="flex items-center space-x-2 text-sm text-gray-600 font-bold">
+                  <Facebook className="h-4 w-4" />
+                  <span>Facebook</span>
+                </div>
+                <a
+                  href={company.facebookUrl}
+                  className="text-sm text-purple-600 hover:underline">
+                  {company.facebookUrl || "N/A"}
+                </a>
+              </div>
+              <div>
+                <div className="flex items-center space-x-2 text-sm text-gray-600 font-bold">
+                  <Instagram className="h-4 w-4" />
+                  <span>Instagram</span>
+                </div>
+                <a
+                  href={company.instagramUrl}
+                  className="text-sm text-purple-600 hover:underline">
+                  {company.instagramUrl || "N/A"}
+                </a>
+              </div>
+              <div>
+                <div className="flex items-center space-x-2 text-sm text-gray-600 font-bold">
+                  <Twitter className="h-4 w-4" />
+                  <span>Twitter</span>
+                </div>
+                <a
+                  href={company.twitterUrl}
+                  className="text-sm text-purple-600 hover:underline">
+                  {company.twitterUrl || "N/A"}
+                </a>
+              </div>
+              <div>
+                <div className="flex items-center space-x-2 text-sm text-gray-600 font-bold">
+                  <Linkedin className="h-4 w-4" />
+                  <span>LinkedIn</span>
+                </div>
+                <a
+                  href={company.linkedinUrl}
+                  className="text-sm text-purple-600 hover:underline">
+                  {company.linkedinUrl || "N/A"}
+                </a>
+              </div>
+              <div>
+                <div className="flex items-center space-x-2 text-sm text-gray-600 font-bold">
+                  <MapPin className="h-4 w-4" />
+                  <span>Address</span>
+                </div>
+                <p className="text-sm text-gray-900">
+                  {company.address || "N/A"}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Screenshot */}
+          <div className="lg:col-span-2 bg-white p-5 rounded-md">
+            <h2 className="flex items-center space-x-2 text-lg font-semibold text-foreground mb-4">
+              <Camera className="h-5 w-5 text-primary" />
+              <span>Screenshot of Webpage</span>
+            </h2>
+            <div className="overflow-hidden rounded-lg border bg-white shadow-sm">
+              {company.screenshotUrl ? (
+                <img
+                  src={company.screenshotUrl}
+                  alt="Website Screenshot"
+                  className="w-full h-auto object-cover"
+                />
+              ) : (
+                <div className="flex h-64 items-center justify-center bg-gray-50 text-sm text-muted-foreground">
+                  No screenshot available
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 
